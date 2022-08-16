@@ -16,8 +16,38 @@ public class Client {
             out = new PrintWriter(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
+    Thread sender = new Thread(new Runnable() {
+        String msg;
+        @Override
+        public void run() {
+            while (true){
+                msg = sc.nextLine();
+                out.println();
+                out.flush();
+            }
+        }
+    });
+    sender.start();
 
-
+    Thread receiver = new Thread(new Runnable() {
+        String msg;
+        @Override
+        public void run() {
+            try {
+                msg = in.readLine();
+                while (msg!=null){
+                    System.out.println("Server : "+msg);
+                    msg = in.readLine();
+                }
+                System.out.println("Server out of service");
+                out.close();
+                clientSocket.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    });
+    receiver.start();
         }catch (IOException e) {
             e.printStackTrace();
         }
