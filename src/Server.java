@@ -35,11 +35,32 @@ public class Server {
         });
         sender.start();
 
+        Thread receive = new Thread(new Runnable() {
+            String msg;
+            @Override
+            public void run() {
+                try {
+                    msg = in.readLine();
+                    while (msg!=null){
+                        System.out.println("Client : "+msg);
+                        msg = in.readLine();
+                    }
+
+                    System.out.println("Client Deconecte");
+
+                    out.close();
+                    clientSocket.close();
+                    serverSocket.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
     } catch (IOException e){
         e.printStackTrace();
     }
 
     }
-
 
 }
